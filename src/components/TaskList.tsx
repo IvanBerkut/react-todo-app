@@ -32,49 +32,64 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onDelete }) => {
         <Typography align="center">No tasks yet.</Typography>
       ) : (
         <List>
-          {tasks.map(task => (
-            <ListItem
-              key={task.id}
-              divider
-              alignItems="flex-start"
-              sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column', sm: 'row' },
-                alignItems: { xs: 'flex-start', sm: 'center' },
-              }}
-            >
-              <ListItemText
-                sx={{ pr: { xs: 0, sm: 8 }, flex: 1 }}
-                primaryTypographyProps={{ sx: { wordBreak: 'break-word', whiteSpace: 'pre-line' } }}
-                primary={
-                  <>
-                    {task.title} ({task.priority})
-                    {task.description && (
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        {task.description}
-                      </Typography>
-                    )}
-                  </>
-                }
-                secondary={task.dueDate ? `Due: ${task.dueDate}` : undefined}
-              />
-              <Stack
-                direction="row"
-                spacing={1}
+            {tasks.map(task => (
+                <ListItem
+                key={task.id}
+                divider
+                alignItems="flex-start"
                 sx={{
-                  mt: { xs: 1, sm: 0 },
-                  alignSelf: { xs: 'flex-end', sm: 'center' },
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'flex-start', sm: 'center' },
                 }}
-              >
-                <IconButton size="small" edge="end" aria-label="edit" onClick={() => setEditingTask(task)}>
-                  <EditIcon fontSize="small" />
-                </IconButton>
-                <IconButton size="small" edge="end" aria-label="delete" onClick={() => setTaskToDelete(task)}>
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </Stack>
-            </ListItem>
-          ))}
+                >
+                <ListItemText
+                    sx={{
+                    pr: { xs: 0, sm: 8 },
+                    flex: 1,
+                    cursor: 'pointer',
+                    }}
+                    primaryTypographyProps={{
+                    sx: {
+                        wordBreak: 'break-word',
+                        whiteSpace: 'pre-line',
+                        textDecoration: task.completed ? 'line-through' : 'none',
+                        color: task.completed ? 'text.disabled' : 'inherit',
+                        transition: 'color 0.2s',
+                    }
+                    }}
+                    primary={
+                    <span
+                        onClick={() => onEdit({ ...task, completed: !task.completed })}
+                        title="Click to mark as done/undone"
+                    >
+                        {task.title} ({task.priority})
+                        {task.description && (
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                            {task.description}
+                        </Typography>
+                        )}
+                    </span>
+                    }
+                    secondary={task.dueDate ? `Due: ${task.dueDate}` : undefined}
+                />
+                <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{
+                    mt: { xs: 1, sm: 0 },
+                    alignSelf: { xs: 'flex-end', sm: 'center' },
+                    }}
+                >
+                    <IconButton size="small" edge="end" aria-label="edit" onClick={() => setEditingTask(task)}>
+                    <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton size="small" edge="end" aria-label="delete" onClick={() => setTaskToDelete(task)}>
+                    <DeleteIcon fontSize="small" />
+                    </IconButton>
+                </Stack>
+                </ListItem>
+            ))}
         </List>
       )}
 

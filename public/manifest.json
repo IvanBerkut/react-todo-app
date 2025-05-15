@@ -1,6 +1,19 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ToDo",
+  "name": "React ToDo App",
+  "screenshots": [
+  {
+    "src": "screenshot-wide.png",
+    "sizes": "1280x720",
+    "type": "image/png",
+    "form_factor": "wide"
+  },
+  {
+    "src": "screenshot-mobile.png",
+    "sizes": "375x667",
+    "type": "image/png"
+  }
+],
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +33,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#1976d2",
   "background_color": "#ffffff"
 }

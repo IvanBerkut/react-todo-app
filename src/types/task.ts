@@ -7,4 +7,5 @@ export interface Task {
   priority: Priority;
   dueDate?: string; // ISO date string
   completed: boolean;
+  notified?: boolean;
 }

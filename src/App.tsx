@@ -25,6 +25,42 @@ function App() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
 
+  // Request notification permission on mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // Notify when a due date is reached
+  useEffect(() => {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      tasks.forEach(task => {
+        if (
+          task.dueDate &&
+          !task.completed &&
+          new Date(task.dueDate) <= now &&
+          !task.notified // custom property to avoid duplicate notifications
+        ) {
+          new Notification('Task Due!', {
+            body: `${task.title} is due now!`,
+          });
+          // Mark as notified (update state)
+          setTasks(prev =>
+            prev.map(t =>
+              t.id === task.id ? { ...t, notified: true } : t
+            )
+          );
+        }
+      });
+    }, 60 * 1000); // check every minute
+
+    return () => clearInterval(interval);
+  }, [tasks]);
+
   const handleAddTask = (task: Omit<Task, 'id' | 'completed'>) => {
     setTasks(prev => [
       ...prev,
@@ -62,12 +98,12 @@ function App() {
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 } }}>
       <Paper elevation={3} 
-      sx={{
-        p: { xs: 1, sm: 3 },
-        width: '100%',
-        boxSizing: 'border-box',
-        overflowX: 'auto',
-      }}>
+        sx={{
+          p: { xs: 1, sm: 3 },
+          width: '100%',
+          boxSizing: 'border-box',
+          overflowX: 'auto',
+        }}>
         <Typography variant="h4" align="center" gutterBottom>
           ToDo App
         </Typography>
